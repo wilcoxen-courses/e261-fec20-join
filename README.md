@@ -1,4 +1,4 @@
-# Exercise: Analyzing the 2020 Election Data
+# Exercise: Analyzing the 2020 Contributions Data
 
 ### Summary
 
