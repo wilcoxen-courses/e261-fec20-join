@@ -1,10 +1,9 @@
-#! /bin/python3
-#  PAI789 (PJW)
-#
-#  Demonstrate drawing a simple heatmap. Note: to run this 
-#  script you'll need to download the demo.csv file from 
-#  the course Google Drive for this assignment.
-#
+"""
+demo.py
+Spring 2022 PJW
+
+Demonstrate drawing a simple heatmap.
+"""
 
 import pandas as pd
 import matplotlib.pyplot as plt

@@ -1,22 +1,22 @@
 # Exercise: Analyzing the 2020 Contributions Data
 
-### Summary
+## Summary
 
 This exercise cleans up the election data from the earlier assignment, joins on some additional information from the FEC, and then does a little analysis.
 
-### Input Data
+## Input Data
 
-You'll need the **contrib_by_zip.csv** file you produced from the previous FEC assignment. In addition, the following input files are available on the course Google Drive: **pocodes.csv**, a list of states that will be used for filtering the data; **committees.csv**, FEC information about campaign committees; and **candidates.csv**, FEC information about candidates. Note that **committees.csv** and **candidates.csv** contain information about House and Senate races, not just the Presidential election, and there are records for some years other than 2020. All of that will be filtered out.
+The main input file is **contrib_by_zip.zip**, which is available from the course Google Drive. It's a zipped version of the file produced in the previous FEC assignment. The additional files are provided in the Google Drive folder as well: **pocodes.csv**, a list of states that will be used for filtering the data; **fec_committees.csv**, FEC information about campaign committees; and **fec_candidates.csv**, FEC information about candidates. Note that **fec_committees.csv** and **fec_candidates.csv** contain information about House and Senate races, not just the Presidential election, and there are records for some years other than 2020. All of that will be filtered out.
 
-### Deliverables
+## Deliverables
 
 The deliverables are three scripts: **contrib_clean.py**, which removes some unneeded records from the aggregated contributions data; **com_cand_info.py**, which builds a file of information about committees and candidates; and **by_place_cand.py** which builds a joined dataset that links contributions to candidates and does a little analysis. Instructions for each are provided below.
 
-### Instructions
+## Instructions
 
-**A. Script contrib_clean.py**
+### A. Script contrib_clean.py
 
-1. Set `contrib` to the result of using `pd.read_csv()` to read file `"contrib_by_zip.csv"` using `dtype=str`.
+1. Set `contrib` to the result of using `pd.read_csv()` to read file `"contrib_by_zip.zip"` using `dtype=str`.
 
 1. Make `contrib['amt']` numeric using the `.astype(float)` method.
 
@@ -24,7 +24,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Drop the `"Name"` column from `po`.
 
-1. To filter out all the state codes that aren't in the 50 states plus Washington, DC, and Puerto Rico (PR), we'll join on a list of the state codes we want to keep, which are in `po`. That will let us remove the other records shortly using the merge indicator. To do the join, set `contrib` to the result of calling the `.merge()` method of `contrib` with the following arguments: `po`, `left_on='STATE'`, `right_on='PO'`, `how='outer'`, `validate='m:1'`, and `indicator=True`. This will use the two-letter postal codes as the keys in the join. The `left_on` and `right_on` arguments are needed because the column names for the postal codes are not the same in the two datasets. 
+1. To filter out all the state codes that aren't in the 50 states plus Washington, DC, and Puerto Rico (PR), we'll join on a list of the state codes we want to keep, which are in `po`. That will let us remove the other records shortly using the merge indicator. To do the join, set `contrib` to the result of calling the `.merge()` method of `contrib` with the following arguments: `po`, `left_on='STATE'`, `right_on='PO'`, `how='outer'`, `validate='m:1'`, and `indicator=True`. This will use the two-letter postal codes as the keys in the join. The `left_on` and `right_on` arguments are needed because the column names for the postal codes are not the same in the two datasets.
 
     Even though we eventually only want to keep records appearing the right dataset, this is done as an outer join rather than a right join so we can add up the contributions that will be left out.
 
@@ -38,7 +38,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Next we'll tabulate the data that's going to be dropped when we exclude records with bad state codes. Start by picking out the bad records and grouping them by state as shown below:
 
-    ```
+    ```python
     bad_recs = contrib[state_bad].groupby('STATE')
     ```
 
@@ -50,9 +50,9 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Now filter out the records by setting `contrib` to the rows of `contrib` where `state_bad == False`.
 
-1. Now we'll look for bad zipcodes by finding any that aren't purely numeric. To do that, set `num_zip` to the result of calling the `pd.to_numeric()` function with the following arguments: `contrib['zip']` and `errors='coerce'`. That tells Pandas to build a new series by converting the `zip` column into its numeric equivalent. The important feature is the `errors='coerece'` argument: that tells Pandas to put in the missing data code for anything that can't be converted to a number rather than stopping with an error message.
+1. Now we'll look for bad zip codes by finding any that aren't purely numeric. To do that, set `num_zip` to the result of calling the `pd.to_numeric()` function with the following arguments: `contrib['zip']` and `errors='coerce'`. That tells Pandas to build a new series by converting the `zip` column into its numeric equivalent. The important feature is the `errors='coerece'` argument: that tells Pandas to put in the missing data code for anything that can't be converted to a number rather than stopping with an error message.
 
-1. Set `zip_bad` to the result of appling the `.isna()` method to `num_zip`. The result will be a series with `True` where the corresponding value of `num_zip` is missing and `False` everywhere else.
+1. Set `zip_bad` to the result of applying the `.isna()` method to `num_zip`. The result will be a series with `True` where the corresponding value of `num_zip` is missing and `False` everywhere else.
 
 1. Do an analysis similar to that for `state_bad`. Set `bad_recs` to `contrib[zip_bad].groupby('zip')`. Then set `zip_bad_amt` to the result of summing `bad_recs['amt']`, print `zip_bad_amt`, and print the result of summing it.
 
@@ -64,13 +64,13 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Then change the name of the data in the series to `'total_amt'` to reflect that it is the total by committee. That's done by setting the `name` attribute of the series to `'total_amt'` as follows:
 
-    ```
+    ```python
     com_total.name = 'total_amt'
     ```
 
-1. Finally, use the `.to_csv()` method to write `com_total` to file `com_total.csv`. 
+1. Finally, use the `.to_csv()` method to write `com_total` to file `com_total.csv`.
 
-**B. Script com_cand_info.py**
+### B. Script com_cand_info.py
 
 1. Import any modules needed.
 
@@ -78,7 +78,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Set `com_total` to the result of using `pd.read_csv()` on `com_total.csv`.
 
-1. Set `com_info` to the result of applying `pd.read_csv()` to file `"committees.csv"` using the argument `dtype=str`.
+1. Set `com_info` to the result of applying `pd.read_csv()` to file `"fec_committees.csv"` using the argument `dtype=str`.
 
 1. Trim down `com_info` to the following columns: `'CMTE_ID'`, `'CMTE_NM'`, `'CMTE_PTY_AFFILIATION'`, `'CAND_ID'`. (FAQ1)
 
@@ -90,7 +90,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Print `numcan` for rows where `numcan > 1`. If all has gone well the result will be an empty series. That indicates that there aren't any committees with more than one candidate.
 
-1. Now read the information about candidates. Set `pres` to the result of using `pd.read_csv()` to read `candidates.csv` using `dtype=str`.
+1. Now read the information about candidates. Set `pres` to the result of using `pd.read_csv()` to read `fec_candidates.csv` using `dtype=str`.
 
 1. Next we'll filter out everyone who wasn't running for President in 2020. Start by setting `is_pres` to `pres['CAND_OFFICE'] == 'P'`. That will be true for Presidential candidates and false for everyone else.
 
@@ -110,7 +110,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Use the `.to_csv()` method to write `com_cand` to `com_cand_info.csv` using the `index=False` argument since the index is just row numbers that we don't need to keep.
 
-**C. Script by_place_cand.py**
+### C. Script by_place_cand.py
 
 1. Import modules as needed.
 
@@ -126,9 +126,9 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Use `.to_csv()` to write `by_place_cand` out to file `by_place_cand.csv`.
 
-1. Now we'll do a little analysis to see which places provided the largest contributions to each candidate. Start by summing things up to the state and candidate level by setting `mil` equal to the result of calling `.sum()` on `by_place_cand` with the argument `level=["STATE","CAND_NAME"]`, and then dividing the result by `1e6` to convert it to millions of dollars.
+1. Now we'll do a little analysis to see which places provided the largest contributions to each candidate. Start by summing things up to the state and candidate level by setting `mil` equal to the result of calling `.groupby()` on `by_place_cand` with the argument `["STATE","CAND_NAME"]`, calling `.sum()` on the result, and then dividing that `1e6` to convert it to millions of dollars.
 
-1. Next, compute overall totals by candidate by setting `by_cand` to the result of applying `.sum()` to `mil` with the argument `level="CAND_NAME"`.
+1. Next, compute overall totals by candidate by setting `by_cand` to the result of applying `.groupby()` to `mil` with the argument `"CAND_NAME"` and applying `.sum()` to the result.
 
 1. Select the top 10 candidates by setting `top_cand` to the result of calling the `.sort_values()` method of `by_cand` and then using `[-10:]` to select the last 10 entries. Then print `top_cand`.
 
@@ -158,7 +158,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Set `sub` to the result of using `keep` to select rows from `reset`.
 
-1. Now we'll sum things up over the zip codes. Start by setting `grouped` equal to the result of grouping `sub` by `"STATE"` and `"CAND_NAME"`. 
+1. Now we'll sum things up over the zip codes. Start by setting `grouped` equal to the result of grouping `sub` by `"STATE"` and `"CAND_NAME"`.
 
 1. Next, set `summed` to the result of applying `.sum()` to the `"amt"` column of `grouped`.
 
@@ -174,20 +174,20 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Tighten the layout and then save the figure as `"heatmap.png"`.
 
-### Submitting
+## Submitting
 
 Once you're happy with everything and have committed all of the changes to your local repository, please push the changes to GitHub. At that point, you're done: you have submitted your answer.
 
-### Tips
+## Tips
 
-+ A subsequent assignment will map some of the detailed data saved in `by_place_cand.csv`. In the mean time, you might find it interesting to look up a few zipcodes you know to see what contributions looked like in those areas.
++ A subsequent assignment will map some of the detailed data saved in `by_place_cand.csv`. In the mean time, you might find it interesting to look up a few zip codes you know to see what contributions looked like in those areas.
 
-### FAQS
+## FAQS
 
 1. *How do I trim a dataframe down to a subset of its columns?*
 
     To trim dataframe `D` down to the columns in list `L` use `D = D[L]`.
 
-2. *How do I create a new single-panel figure?*
+1. *How do I create a new single-panel figure?*
 
     Set `fig, ax1` to the result of calling `plt.subplots(dpi=300)`.
