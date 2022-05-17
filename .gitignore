@@ -34,5 +34,5 @@ makefile
 *.zip
 *.csv
 
-! demo.csv
+!demo.csv
 
