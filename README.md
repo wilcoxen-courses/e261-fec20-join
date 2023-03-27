@@ -6,7 +6,7 @@ This exercise cleans up the election data from the earlier assignment, joins on 
 
 ## Input Data
 
-The main input file is **contrib_by_zip.zip**, which is available from the course Google Drive. It's a zipped version of the file produced in the previous FEC assignment. The additional files are provided in the Google Drive folder as well: **pocodes.csv**, a list of states that will be used for filtering the data; **fec_committees.csv**, FEC information about campaign committees; and **fec_candidates.csv**, FEC information about candidates. Note that **fec_committees.csv** and **fec_candidates.csv** contain information about House and Senate races, not just the Presidential election, and there are records for some years other than 2020. All of that will be filtered out.
+The main input file is **contrib_by_zip.zip**, which is available from the course Google Drive. It's a zipped version of the file produced in the previous FEC assignment. Three additional files are provided in the Google Drive folder as well: **pocodes.csv**, a list of states that will be used for filtering the data; **fec_committees.csv**, FEC information about campaign committees; and **fec_candidates.csv**, FEC information about candidates. Note that **fec_committees.csv** and **fec_candidates.csv** contain information about House and Senate races, not just the Presidential election, and there are records for some years other than 2020. All of that will be filtered out.
 
 ## Deliverables
 
@@ -50,13 +50,11 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Now filter out the records by setting `contrib` to the rows of `contrib` where `state_bad == False`.
 
-1. Now we'll look for bad zip codes by finding any that aren't purely numeric. To do that, set `num_zip` to the result of calling the `pd.to_numeric()` function with the following arguments: `contrib['zip']` and `errors='coerce'`. That tells Pandas to build a new series by converting the `zip` column into its numeric equivalent. The important feature is the `errors='coerece'` argument: that tells Pandas to put in the missing data code for anything that can't be converted to a number rather than stopping with an error message.
+1. Now we'll look for bad zip codes by finding any that aren't purely numeric. To do that, set `zip_num` to the result of calling the `.str.isnumeric()` method on `contrib['zip']`.
 
-1. Set `zip_bad` to the result of applying the `.isna()` method to `num_zip`. The result will be a series with `True` where the corresponding value of `num_zip` is missing and `False` everywhere else.
+1. Set `zip_bad` equal to `~zip_num` or to `zip_num == False`. The result will be a series with `True` wherever the zip code isn't numeric.
 
-1. Do an analysis similar to that for `state_bad`. Set `bad_recs` to `contrib[zip_bad].groupby('zip')`. Then set `zip_bad_amt` to the result of summing `bad_recs['amt']`, print `zip_bad_amt`, and print the result of summing it.
-
-1. Now filter out the records by setting `contrib` to the rows of `contrib` where `zip_bad == False`.
+1. Print an appropriate heading and then print the result of calling the `.sum()` method on `zip_bad`. The result will be the number of bad zip codes. In this dataset it should be zero. If it weren't, it would be necessary to take out the bad records using steps similar to those above for bad states.
 
 1. Use the `.to_pickle()` method of `contrib` to write a file called `contrib_clean.pkl`.
 
@@ -73,8 +71,6 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 ### B. Script com_cand_info.py
 
 1. Import any modules needed.
-
-1. Set `contrib` to the result of using `pd.read_pickle()` to reload the data written by the previous script.
 
 1. Set `com_total` to the result of using `pd.read_csv()` on `com_total.csv`.
 
