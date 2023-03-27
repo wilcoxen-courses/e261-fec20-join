@@ -110,6 +110,8 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Import modules as needed.
 
+1. Set the default resolution for plots to 300 DPI.
+
 1. Set `contrib` to the result of using `pd.read_pickle()` to reload `contrib_clean.pkl`, and set `com_cand` to the result of using `pd.read_csv()` to read `com_cand_info.csv`.
 
 1. Create `merged` by joining `com_cand` onto `contrib` by using the `.merge()` method of `contrib` with the following arguments: `com_cand`, `on='CMTE_ID'`, `validate='m:1'`, and `indicator=True`.
@@ -130,7 +132,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Follow a similar procedure to compute `by_state`, the overall totals by state, and `top_state`, the top ten states. Then print `top_state`.
 
-1. Create a new two-panel figure by setting `fig, (ax1,ax2)` to the result of calling `plt.subplots(1,2,dpi=300)`.
+1. Create a new two-panel figure by setting `fig, (ax1,ax2)` to the result of calling `plt.subplots(1,2)`.
 
 1. Set the figure title by calling `fig.suptitle()` with the argument `"Top Candidates and States, Millions of Dollars"`.
 
@@ -186,4 +188,4 @@ Once you're happy with everything and have committed all of the changes to your 
 
 1. *How do I create a new single-panel figure?*
 
-    Set `fig, ax1` to the result of calling `plt.subplots(dpi=300)`.
+    Set `fig, ax1` to the result of calling `plt.subplots()`.
