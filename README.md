@@ -82,7 +82,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Print the merge indicator to verify that all of the committees with contributions were found in `com_info` and then drop `'_merge'`.
 
-1. In principle, a committee could fund multiple candidates, which would be a problem because we wouldn't know how the committee split its donations between the candidates. We'll check whether that's an issue. Set `numcan` to `com_info` grouped by `'CMTE_ID'`, and then apply the `.size()` method to the result by placing it at the end of the line after the `.groupby()` call. The `.size()` method counts the number of entries in each group, so the result will be a series with the number of times each committee appears in `com_info`.
+1. In principle, a committee could fund multiple candidates, which would be a problem because we wouldn't know how the committee split its donations between the candidates. We'll check whether that's an issue. Set `numcan` to the result of grouping `com_info` by `'CMTE_ID'` and applying the `.size()` method. Since `.size()` counts the number of entries in each group, the result will be a series with the number of times each committee appears in `com_info`.
 
 1. Print `numcan` for rows where `numcan > 1`. If all has gone well the result will be an empty series. That indicates that there aren't any committees with more than one candidate.
 
