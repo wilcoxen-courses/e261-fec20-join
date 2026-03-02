@@ -166,7 +166,7 @@ The deliverables are three scripts: **contrib_clean.py**, which removes some unn
 
 1. Call `.suptitle()` on `fig` to set the figure's title to `"Contributions in Millions"`.
 
-1. Call `sns.heatmap()` with the following arguments: `grid`, `annot=True`, `fmt=".0f"`, and `ax=ax1`. The `annot` and `fmt` arguments cause the cells in the heatmap to be labeled with values rounded to integers.
+1. Call `sns.heatmap()` with the following arguments: `grid`, `annot=True`, `fmt=".0f"`, and `ax=ax`. The `annot` and `fmt` arguments cause the cells in the heatmap to be labeled with values rounded to integers.
 
 1. Set the X axis label to `"State"` and the Y axis label to `"Candidate"`.
 
@@ -188,4 +188,4 @@ Once you're happy with everything and have committed all of the changes to your 
 
 1. *How do I create a new single-panel figure?*
 
-    Set `fig, ax1` to the result of calling `plt.subplots()`.
+    Set `fig, ax` to the result of calling `plt.subplots()`.
